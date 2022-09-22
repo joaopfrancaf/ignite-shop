@@ -8,6 +8,8 @@ import camiseta2 from '../assests/camisetas/2.png'
 import camiseta3 from '../assests/camisetas/3.png'
 
 import 'keen-slider/keen-slider.min.css';
+import { stripe } from "../lib/stripe";
+import { GetServerSideProps } from "next";
 
 //import { styled } from "../styles"
 
@@ -35,13 +37,13 @@ const Button = styled('button',{
 
 
 
-export default function Home() {
+export default function Home(props) {
   const [sliderRef] = useKeenSlider({
     slides: {
       perView: 3,
       spacing:48,
     }
-  })
+  })   //aqui é o codigo da biblioteca do carousel (KeenSlider)
   return (
     <HomeContainer ref={sliderRef} className='keen-slider'>
       <Product className="keen-slider__slide">
@@ -81,4 +83,16 @@ export default function Home() {
       </Product>
     </HomeContainer>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const response = await stripe.products.list()
+
+  console.log(response.data)
+
+  return {
+    props: {
+      list: [1,2,3]
+    }
+  }
 }
