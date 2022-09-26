@@ -19,7 +19,7 @@ export default function Product ({product}: ProductProps) {
     return (
         <ProductContainer>
             <ImageContainer>
-                <Image src={product.imageUrl} alt="" width={520} height={480} />
+                <Image src={product.imageUrl} width={520} height={480}  alt=""/>
             </ImageContainer>
 
             <ProductDetails>
@@ -36,13 +36,12 @@ export default function Product ({product}: ProductProps) {
     )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+/*export const getStaticPaths: GetStaticPaths = async () => {
     return {
-        path: [
-            //{ params: {id: ''}}
-        ]
+        paths: [],
+        fallback: 'blocking',
     }
-} 
+}
 
 export const getStaticProps: GetStaticProps<any, {id: string}> = async ({ params }) => {
     const productId = params.id;
@@ -67,4 +66,4 @@ export const getStaticProps: GetStaticProps<any, {id: string}> = async ({ params
 
         revalidate: 60 * 60 * 1, //quanto tempo em cache (1h)
     }
-}
+}*/
