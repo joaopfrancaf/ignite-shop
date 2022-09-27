@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from 'next'
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router' 
 import Stripe from 'stripe'
 import Image from 'next/future/image'
@@ -14,12 +14,12 @@ interface ProductProps {
         description: string;
     }
 }
-export default function Product ({product}: ProductProps) {
+export default function Product({ product }: ProductProps) {
 
     return (
         <ProductContainer>
             <ImageContainer>
-                <Image src={product.imageUrl} width={520} height={480}  alt=""/>
+            <Image src={product.imageUrl} alt="" width={520} height={400} />
             </ImageContainer>
 
             <ProductDetails>
@@ -36,7 +36,7 @@ export default function Product ({product}: ProductProps) {
     )
 }
 
-/*export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
     return {
         paths: [],
         fallback: 'blocking',
@@ -54,16 +54,18 @@ export const getStaticProps: GetStaticProps<any, {id: string}> = async ({ params
 
     return {
         props: {
-            id: product.id,
-            name: product.name,
-            imageUrl: product.images[0],
-            price: new Intl.NumberFormat('pt-BR', {
+            product: {
+                id: product.id,
+                name: product.name,
+                imageUrl: product.images[0],
+                price: new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
                 currency: 'BRL',
-            }).format(price.unit_amount / 100),
-            description: product.description
+                }).format(price.unit_amount / 100),
+                description: product.description
+            }
         },
 
         revalidate: 60 * 60 * 1, //quanto tempo em cache (1h)
     }
-}*/
+}
