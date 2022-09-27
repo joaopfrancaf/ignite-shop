@@ -4,6 +4,8 @@ import Stripe from 'stripe'
 import Image from 'next/future/image'
 import { stripe } from '../../lib/stripe'
 import { ProductContainer, ImageContainer, ProductDetails } from '../../styles/pages/product'
+import axios from 'axios'
+import React, { useState } from 'react';
 
 interface ProductProps {
     product: {
@@ -16,8 +18,24 @@ interface ProductProps {
     }
 }
 export default function Product({ product }: ProductProps) {
-    function handleBuyProduct () {
-        console.log(product.defaultPriceId)
+    const [isCreathingCheckoutSession, setIsCreathingCheckoutSession] = useState(false)
+
+    async function handleBuyProduct () {
+        try {
+            setIsCreathingCheckoutSession(true)
+
+            const response = await axios.post('/api/checkout', {
+                priceId: product.defaultPriceId,
+            })
+            
+            const { checkoutUrl } = response.data;
+
+            window.location.href = checkoutUrl
+        } catch (err) {
+            setIsCreathingCheckoutSession(false)
+
+            alert('falha ao redirecionar ao checkout')
+        }
     }
     return (
         <ProductContainer>
@@ -31,7 +49,7 @@ export default function Product({ product }: ProductProps) {
 
                 <p>{product.description}</p>
             
-                <button onClick={handleBuyProduct}>
+                <button disabled={isCreathingCheckoutSession} onClick={handleBuyProduct}>
                     comprar agora
                 </button>
             </ProductDetails>
@@ -72,4 +90,8 @@ export const getStaticProps: GetStaticProps<any, {id: string}> = async ({ params
 
         revalidate: 60 * 60 * 1, //quanto tempo em cache (1h)
     }
+}
+
+function UseState(arg0: boolean): [any, any] {
+    throw new Error('Function not implemented.')
 }
