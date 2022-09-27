@@ -75,6 +75,9 @@ export default function Home({products}: HomeProps) {
   )
 }
 
+
+//embaixo metodo para fazer o fatch no stripe, ele fica no lado do servidor node do next.js e fica em cache nele
+//lembrando que esse metodo fica no lado do nextjs, entao qualquer console.log só aparece no console, nao na pagina
 export const getStaticProps: GetStaticProps = async () => {
   const response = await stripe.products.list({
     expand: ['data.default_price']
