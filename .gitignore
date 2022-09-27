@@ -26,7 +26,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env*.local
+# esse arquivo local (.env*.local) tem que estar incluido no git.ignore, mas como este é um app de testes só vai kkkkkk
 
 # vercel
 .vercel
