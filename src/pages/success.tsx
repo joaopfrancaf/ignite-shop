@@ -9,7 +9,7 @@ interface SuccessProps {
     custumerName: string;
     product: {
         name: string;
-        imageurl: string;
+        imageUrl: string;
     }
 }
 export default function Success({custumerName, product}: SuccessProps) {
@@ -17,7 +17,7 @@ export default function Success({custumerName, product}: SuccessProps) {
         <SuccessContainer>
             <h1>Compra efetuada!</h1>
             <ImageContainer>
-                <Image src={product.imageurl} width={120} height={110} alt=""/>
+                <Image src={product.imageUrl} width={120} height={110} alt=""/>
             </ImageContainer>
 
             <p>uhull <strong>{custumerName}</strong>o produto <strong>{product.name}</strong> foi compradaaaaaaaaaaa</p>
