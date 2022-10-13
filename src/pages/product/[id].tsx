@@ -1,9 +1,11 @@
-import { GetStaticPaths, GetStaticProps } from 'next'
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router' 
 import Stripe from 'stripe'
 import Image from 'next/future/image'
 import { stripe } from '../../lib/stripe'
 import { ProductContainer, ImageContainer, ProductDetails } from '../../styles/pages/product'
+import axios from 'axios'
+import React, { useState } from 'react';
 
 interface ProductProps {
     product: {
@@ -12,14 +14,33 @@ interface ProductProps {
         imageUrl:string;
         price: string;
         description: string;
+        defaultPriceId: string
     }
 }
-export default function Product ({product}: ProductProps) {
+export default function Product({ product }: ProductProps) {
+    const [isCreathingCheckoutSession, setIsCreathingCheckoutSession] = useState(false)
 
+    async function handleBuyProduct () {
+        try {
+            setIsCreathingCheckoutSession(true)
+
+            const response = await axios.post('/api/checkout', {
+                priceId: product.defaultPriceId,
+            })
+            
+            const { checkoutUrl } = response.data;
+
+            window.location.href = checkoutUrl
+        } catch (err) {
+            setIsCreathingCheckoutSession(false)
+
+            alert('falha ao redirecionar ao checkout')
+        }
+    }
     return (
         <ProductContainer>
             <ImageContainer>
-                <Image src={product.imageUrl} alt="" width={520} height={480} />
+            <Image src={product.imageUrl} alt="" width={520} height={400} />
             </ImageContainer>
 
             <ProductDetails>
@@ -28,7 +49,7 @@ export default function Product ({product}: ProductProps) {
 
                 <p>{product.description}</p>
             
-                <button>
+                <button disabled={isCreathingCheckoutSession} onClick={handleBuyProduct}>
                     comprar agora
                 </button>
             </ProductDetails>
@@ -38,11 +59,10 @@ export default function Product ({product}: ProductProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
     return {
-        path: [
-            { params: {id: ''}}
-        ]
+        paths: [],
+        fallback: 'blocking',
     }
-} 
+}
 
 export const getStaticProps: GetStaticProps<any, {id: string}> = async ({ params }) => {
     const productId = params.id;
@@ -55,16 +75,23 @@ export const getStaticProps: GetStaticProps<any, {id: string}> = async ({ params
 
     return {
         props: {
-            id: product.id,
-            name: product.name,
-            imageUrl: product.images[0],
-            price: new Intl.NumberFormat('pt-BR', {
+            product: {
+                id: product.id,
+                name: product.name,
+                imageUrl: product.images[0],
+                price: new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
                 currency: 'BRL',
-            }).format(price.unit_amount / 100),
-            description: product.description
+                }).format(price.unit_amount / 100),
+                description: product.description,
+                defaultPriceId: price.id,
+            }
         },
 
         revalidate: 60 * 60 * 1, //quanto tempo em cache (1h)
     }
+}
+
+function UseState(arg0: boolean): [any, any] {
+    throw new Error('Function not implemented.')
 }
