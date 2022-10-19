@@ -15,7 +15,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     //as requesiços acima, caso o method http for errado aparece a mensagem, primeira, caso nao tem o priceid aparece a segunda
 
-    const success_url = `${process.env.NEXT_URL}/success?session_id={CHECKOUT_SESSION_ID}`;//esse CHECKOUT_SESSION_ID é uma variavel do stripe, que traz na requisição acho todos os dados de compra do stripe
+                          // antes do link do heroku tava: `${process.env.NEXT_URL}
+    const success_url = `https://testeignite.herokuapp.com/success?session_id={CHECKOUT_SESSION_ID}`;//esse CHECKOUT_SESSION_ID é uma variavel do stripe, que traz na requisição acho todos os dados de compra do stripe
     const cancel_url = `${process.env.NEXT_URL}/`;
 
 
